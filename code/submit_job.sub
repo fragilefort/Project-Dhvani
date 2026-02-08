@@ -1,0 +1,40 @@
+# HTCondor submit file for Project Dhvani
+# Language Identification (audio files) - Project Dhvani
+
+# Universe - using custom docker image with all dependencies
+universe                = docker
+docker_image            = fragilefort/project-dhvani:v2
+
+# Executable and arguments
+executable              = /usr/bin/python
+arguments               = train_model.py
+
+# Output files
+output                  = logs/job_$(Cluster)_$(Process).out
+error                   = logs/job_$(Cluster)_$(Process).err
+log                     = logs/job_$(Cluster)_$(Process).log
+
+# Transfer files
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files    = .env, train_model.py
+
+
+# Resource requirements
+request_GPUs            = 1
+request_CPUs            = 4
+request_memory          = 32GB
+
+# Requirements
+requirements            = UidDomain == "cs.uni-saarland.de"
+
+# Custom flags
++WantGPUHomeMounted     = true
++WantScratchMounted     = true
+
+# Maximum run time (6 hours for training)
++MaxRunTime             = 21600
+
+# Submit one job
+queue 1
+
