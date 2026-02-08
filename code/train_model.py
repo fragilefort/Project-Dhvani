@@ -65,7 +65,7 @@ model_id = "facebook/mms-300m"
 # %%
 feature_extractor = AutoFeatureExtractor.from_pretrained(
     model_id, 
-    do_normalize=True,
+    do_normalize=True,   ##also try false
     return_attention_mask=True,
 )
 
@@ -98,6 +98,14 @@ else:
     input_features_key = "input_values"
 
 # %%
+# check audio lengths to decide max_duration
+sample = train_ds.select(range(100))
+lengths = [len(x['array'])/16000 for x in sample['audio_filepath']]
+print(f"Audio lengths - Min: {min(lengths):.1f}s, Max: {max(lengths):.1f}s, Avg: {np.mean(lengths):.1f}s")
+print(f"75th percentile: {np.percentile(lengths, 75):.1f}s")
+print(f"95th percentile: {np.percentile(lengths, 95):.1f}s")
+
+## need to try for 5,7,10,15 
 max_duration = 7 # in seconds
 
 # %%
@@ -114,7 +122,7 @@ str_to_int = {
 
 # %%
 def preprocess_function(examples):
-
+    ##experiment with max_duration above
     audio_arrays = [x["array"] for x in examples["audio_filepath"]]
 
     inputs = feature_extractor(
