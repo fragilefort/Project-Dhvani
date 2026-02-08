@@ -106,7 +106,7 @@ print(f"Audio lengths - Min: {min(lengths):.1f}s, Max: {max(lengths):.1f}s, Avg:
 print(f"75th percentile: {np.percentile(lengths, 75):.1f}s")
 print(f"95th percentile: {np.percentile(lengths, 95):.1f}s")
 
-## need to try for 5,7,10,15 
+## need to try for 5,7,10,15
 max_duration = 7 # in seconds
 
 # %%
