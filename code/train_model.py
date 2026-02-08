@@ -22,6 +22,8 @@ from datasets import (
     # concatenate_datasets, 
 )
 
+import os
+from dotenv import load_dotenv
 # %%
 
 from transformers import (
@@ -50,12 +52,11 @@ print(f"torch.cuda.get_device_name(): {torch.cuda.get_device_name()}")
 
 # %%
 # login to Hugging Face
-login(token="hf_xxx")
+load_dotenv()
+login(token=os.getenv("HF_TOKEN"))
+wandb.login(key=os.getenv("WANDB_API_KEY"))
 
-# %%
 # login to WANDB
-wandb.login(key="xxx")
-
 # %%
 model_id = "facebook/mms-300m"
 #model_id = "utter-project/mHuBERT-147"
