@@ -233,18 +233,29 @@ data_collator = AudioDataCollator(feature_extractor)
 # %%
 batch_size = 8
 gradient_accumulation_steps = 2
-num_train_epochs = 3
-lr = 0.00001
+num_train_epochs = 5 # changed from 3 to 5 to see if model learns more 
+lr = 3e-5 # changed from 1e-5 to 3e-5 for first experiment 
 
 # %%
-wandb.init(project="Indic-SLID", name=f"SLID_{model_id}_{lr}_{current_time_str}")
-
+# created a unique name for this run based on hyperparameters
+run_name = f"SLID_lr{lr}_bs{batch_size}_ep{num_train_epochs}_{current_time_str}"
+wandb.init(
+    project="Indic-SLID", 
+    name=run_name,
+    config={
+        "learning_rate": lr,
+        "batch_size": batch_size,
+        "epochs": num_train_epochs,
+        "gradient_accumulation_steps": gradient_accumulation_steps,
+        "model_id": model_id
+    }
+)
 # %%
 training_args = TrainingArguments(
+    output_dir=f"./results/{run_name}",
     group_by_length=False,
-    #run_name='SLID_1', 
-    report_to="wandb",  # enable logging to W&B
-    logging_steps=1,  # how often to log to W&B
+    report_to="wandb",
+    logging_steps=10,  # changed from 1 to 10 to reduce log clutter
     per_device_train_batch_size=batch_size, 
     per_device_eval_batch_size=batch_size,    
     eval_strategy="steps",
@@ -258,8 +269,8 @@ training_args = TrainingArguments(
     warmup_ratio=0.1,
     load_best_model_at_end=True,
     metric_for_best_model="accuracy",
-    greater_is_better=True,  # True if your metric should be maximized (like accuracy)
-    save_total_limit=2,  # Keep only the best model
+    greater_is_better=True,
+    save_total_limit=2,
     fp16=True,
     push_to_hub=False,
 )
