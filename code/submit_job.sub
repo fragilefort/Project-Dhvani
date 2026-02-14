@@ -3,7 +3,7 @@
 
 # Universe - using custom docker image with all dependencies
 universe                = docker
-docker_image            = fragilefort/project-dhvani:v2
+docker_image            = fragilefort/project-dhvani:v3
 
 # Executable and arguments
 executable              = /usr/bin/python

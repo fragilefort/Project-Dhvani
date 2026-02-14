@@ -53,7 +53,7 @@ print(f"torch.cuda.get_device_name(): {torch.cuda.get_device_name()}")
 # login to Hugging Face
 load_dotenv()
 login(token=os.getenv("HF_TOKEN"))
-wandb.login(key=os.getenv("WANDB_API_KEY"))
+wandb.login()
 
 # login to WANDB
 # %%
@@ -294,7 +294,7 @@ trainer = Trainer(
     training_args,
     train_dataset=train_ds_encoded,
     eval_dataset=valid_ds_encoded,
-    processing_class=feature_extractor,
+    tokenizer=feature_extractor,
     data_collator=data_collator,  
     compute_metrics=compute_metrics,
 )
