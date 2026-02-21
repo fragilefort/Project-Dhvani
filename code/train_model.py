@@ -182,7 +182,7 @@ config.num_labels=num_labels
 config.label2id=str_to_int
 config.id2label=int_to_str
 
-do_apply_dropout = False 
+do_apply_dropout = True 
 
 # check if dropout is enabled
 if do_apply_dropout:
