@@ -106,7 +106,7 @@ print(f"75th percentile: {np.percentile(lengths, 75):.1f}s")
 print(f"95th percentile: {np.percentile(lengths, 95):.1f}s")
 
 ## need to try for 5,7,10,15
-max_duration = 10 # in seconds
+max_duration = 5 # in seconds
 
 # %%
 # get the set of languages
@@ -233,8 +233,8 @@ data_collator = AudioDataCollator(feature_extractor)
 # %%
 batch_size = 8
 gradient_accumulation_steps = 2
-num_train_epochs = 5 # changed from 3 to 5 to see if model learns more 
-lr = 3e-5 # changed from 1e-5 to 3e-5 for first experiment 
+num_train_epochs = 10 # changed from 3 to 5 to see if model learns more 
+lr = 5e-6 # changed from 1e-5 to 3e-5 for first experiment 
 
 # %%
 # created a unique name for this run based on hyperparameters
