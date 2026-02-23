@@ -57,9 +57,9 @@ wandb.login()
 
 # login to WANDB
 # %%
-model_id = "facebook/mms-300m"
+#model_id = "facebook/mms-300m"
 # model_id = "utter-project/mHuBERT-147"
-# model_id = "facebook/wav2vec2-xls-r-300m"
+model_id = "facebook/wav2vec2-xls-r-300m"
 
 
 # %%
@@ -106,7 +106,7 @@ print(f"75th percentile: {np.percentile(lengths, 75):.1f}s")
 print(f"95th percentile: {np.percentile(lengths, 95):.1f}s")
 
 ## need to try for 5,7,10,15
-max_duration = 5 # in seconds
+max_duration = 10 # in seconds
 
 # %%
 # get the set of languages
@@ -182,7 +182,7 @@ config.num_labels=num_labels
 config.label2id=str_to_int
 config.id2label=int_to_str
 
-do_apply_dropout = True  #changed again to false from true
+do_apply_dropout = False  #changed again to false from true
 
 # check if dropout is enabled
 if do_apply_dropout:
@@ -197,6 +197,10 @@ slid_model = AutoModelForAudioClassification.from_pretrained(
     model_id,
     config=config,
 )
+
+#freeze only the convolutional feature extractor
+slid_model.freeze_feature_encoder()
+
 
 # %%
 # create collator for padding
@@ -234,7 +238,7 @@ data_collator = AudioDataCollator(feature_extractor)
 batch_size = 8
 gradient_accumulation_steps = 2
 num_train_epochs = 10 #changed from 3 to 5 to see if model learns more 
-lr = 5e-6 # changed from 5e-6 to 1e-5 for 4th run
+lr = 1e-5 # changed from 5e-6 to 1e-5 for 4th run
             #changed from 1e-5 to 3e-5 for first experiment
         
 
