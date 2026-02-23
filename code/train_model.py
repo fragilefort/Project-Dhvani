@@ -57,9 +57,9 @@ wandb.login()
 
 # login to WANDB
 # %%
-#model_id = "facebook/mms-300m"
+model_id = "facebook/mms-300m"
 # model_id = "utter-project/mHuBERT-147"
-model_id = "facebook/wav2vec2-xls-r-300m"
+#model_id = "facebook/wav2vec2-xls-r-300m"
 
 
 # %%
