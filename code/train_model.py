@@ -279,6 +279,7 @@ training_args = TrainingArguments(
     save_total_limit=2,
     fp16=True,
     push_to_hub=False,
+    label_smoothing_factor = 0.1,
 )
 
 # %%
