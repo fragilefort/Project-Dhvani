@@ -1,5 +1,5 @@
 universe                = docker
-docker_image            = fragilefort/project-dhvani:v3
+docker_image            = fragilefort/project-dhvani:v4
 
 
 executable              = /usr/bin/python
