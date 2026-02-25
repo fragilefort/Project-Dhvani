@@ -129,7 +129,7 @@ def speed_perturb(array, sr=16000):
     effects = [["speed", str(factor)], ["rate", str(sr)]]
     # sox_effects needs 2d tensor
     waveform = torch.tensor(array).unsqueeze(0)
-    waveform, _ = torchaudio.sox_effects.apply_effect_tensor(
+    waveform, _ = torchaudio.sox_effects.apply_effects_tensor(
             waveform, sr, effects
             )
     return waveform.squeeze(0).numpy()
@@ -140,7 +140,7 @@ def pitch_shift(array, sr = 16000):
     # sox pitch effect takes cents, semitones to cents by mult with 100
     effects = [["pitch", str(steps*100)], ["rate", str(sr)]]
     waveform = torch.tensor(array).unsqueeze(0)
-    waveform, _ = torchaudio.sox_effects.apply_effect_tensor(
+    waveform, _ = torchaudio.sox_effects.apply_effects_tensor(
             waveform, sr, effects
             )
     return waveform.squeeze(0).numpy()
