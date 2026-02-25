@@ -46,7 +46,7 @@ import evaluate
 print("Check if GPU available:")
 print(f"torch.cuda.is_available(): {torch.cuda.is_available()}")
 print(f"torch.cuda.get_device_name(): {torch.cuda.get_device_name()}")
-
+set_seed(42)
 
 
 # %%
@@ -199,7 +199,7 @@ slid_model = AutoModelForAudioClassification.from_pretrained(
 )
 
 #freeze only the convolutional feature extractor
-#slid_model.freeze_feature_encoder()
+slid_model.freeze_feature_encoder()
 
 
 # %%
@@ -238,7 +238,7 @@ data_collator = AudioDataCollator(feature_extractor)
 batch_size = 16
 gradient_accumulation_steps = 1
 num_train_epochs = 10 #changed from 3 to 5 to see if model learns more 
-lr = 5e-6 # changed from 5e-6 to 1e-5 for 4th run
+lr = 1e-5 # changed from 5e-6 to 1e-5 for 4th run
             #changed from 1e-5 to 3e-5 for first experiment
         
 
