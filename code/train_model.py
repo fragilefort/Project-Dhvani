@@ -7,11 +7,14 @@ print(f"Current time: {current_time_str}")
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 from collections import Counter
+from functools import partial
 
 import pandas as pd
 import numpy as np
 import torch
+import torchaudio
 import wandb
+import random
 
 from datasets import (
     load_dataset, 
@@ -119,11 +122,56 @@ str_to_int = {
     s: i for i, s in enumerate(LABELS)
 }
 
+def speed_perturb(array, sr=16000):
+    factor = random.uniform(0.9, 1.1)
+    # "speed" changes the speed without changing the pitch
+    # "rate" resamples back to the original sample rate afterwards
+    effects = [["speed", str(factor)], ["rate", str(sr)]]
+    # sox_effects needs 2d tensor
+    waveform = torch.tensor(array).unsqueeze(0)
+    waveform, _ = torchaudio.sox_effects.apply_effect_tensor(
+            waveform, sr, effects
+            )
+    return waveform.squeeze(0).numpy()
+
+
+def pitch_shift(array, sr = 16000):
+    steps = random.randint(-2, 2)
+    # sox pitch effect takes cents, semitones to cents by mult with 100
+    effects = [["pitch", str(steps*100)], ["rate", str(sr)]]
+    waveform = torch.tensor(array).unsqueeze(0)
+    waveform, _ = torchaudio.sox_effects.apply_effect_tensor(
+            waveform, sr, effects
+            )
+    return waveform.squeeze(0).numpy()
+
+
+def add_noise(array):
+    # generate noise from N(0,1)
+    noise = np.random.randn(len(array))
+    noise = noise * 0.005
+    # each element gets its own noise
+    return array + noise
+
+
+def augment_audio(array, sr = 16000):
+    aug = random.random()
+    # Choose augmentaion method randomly
+    if aug < 0.33:
+        return speed_perturb(array, sr)
+    elif aug < 0.66:
+        return pitch_shift(array, sr)
+    else:
+        return add_noise(array)
+
 
 # %%
-def preprocess_function(examples):
+def preprocess_function(examples, augment = False):
     ##experiment with max_duration above
-    audio_arrays = [x["array"] for x in examples["audio_filepath"]]
+    if augment:
+        audio_arrays = [augment_audio(x["array"]) for x in examples["audio_filepath"]]
+    else:
+        audio_arrays = [x["array"] for x in examples["audio_filepath"]]
 
     inputs = feature_extractor(
         audio_arrays, 
@@ -152,7 +200,7 @@ keep_cols = ['speaker_id', 'language']
 
 # %%
 train_ds_encoded = train_ds.map(
-    preprocess_function, 
+    partial(preprocess_function, augment = True),
     remove_columns=[c for c in train_ds.column_names if c not in keep_cols],
     batched=True,
     batch_size=32,
@@ -161,7 +209,7 @@ train_ds_encoded = train_ds.map(
 
 # %%
 valid_ds_encoded = valid_ds.map(
-    preprocess_function, 
+    partial(preprocess_function, augment = False), 
     remove_columns=[c for c in valid_ds.column_names if c not in keep_cols],
     batched=True,
     batch_size=32,
