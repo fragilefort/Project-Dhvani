@@ -158,11 +158,12 @@ def augment_audio(array, sr = 16000):
     aug = random.random()
     # Choose augmentaion method randomly
     if aug < 0.33:
-        return speed_perturb(array, sr)
+        array = speed_perturb(array, sr)
     elif aug < 0.66:
-        return pitch_shift(array, sr)
-    else:
-        return add_noise(array)
+        array =  pitch_shift(array, sr)
+    
+    array = add_noise(array)
+    return array
 
 
 # %%
@@ -230,7 +231,7 @@ config.num_labels=num_labels
 config.label2id=str_to_int
 config.id2label=int_to_str
 
-do_apply_dropout = False  #changed again to false from true
+do_apply_dropout = True  #changed again to false from true
 
 # check if dropout is enabled
 if do_apply_dropout:
@@ -317,6 +318,7 @@ training_args = TrainingArguments(
     save_strategy="steps", 
     save_steps=100,
     learning_rate=lr,
+    lr_scheduler_type="cosine",
     gradient_accumulation_steps=gradient_accumulation_steps,
     num_train_epochs=num_train_epochs,
     weight_decay=0.01,
@@ -327,6 +329,7 @@ training_args = TrainingArguments(
     save_total_limit=2,
     fp16=True,
     push_to_hub=False,
+    label_smoothing_factor=0.1
 )
 
 # %%
