@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 from collections import Counter
 from functools import partial
+from torch.utils.data import Dataset
 
 import pandas as pd
 import numpy as np
@@ -168,10 +169,7 @@ def augment_audio(array, sr = 16000):
 # %%
 def preprocess_function(examples, augment = False):
     ##experiment with max_duration above
-    if augment:
-        audio_arrays = [augment_audio(x["array"]) for x in examples["audio_filepath"]]
-    else:
-        audio_arrays = [x["array"] for x in examples["audio_filepath"]]
+    audio_arrays = [x["array"] for x in examples["audio_filepath"]]
 
     inputs = feature_extractor(
         audio_arrays, 
@@ -189,18 +187,20 @@ def preprocess_function(examples, augment = False):
     ]
 
     inputs["length"] = [len(f) for f in inputs[input_features_key]]
+    # store raw audio for dynamic augmentation in the dataset wrapper
+    inputs["raw_audio"] = [x["array"].astype(np.float32) for x in examples["audio_filepath"]]
 
     return inputs
 
 # %%
-keep_cols = ['speaker_id', 'language']
+keep_cols = ['speaker_id', 'language', 'raw_audio']
 
 # %% [markdown]
 # ## encode the train and valid splits 
 
 # %%
 train_ds_encoded = train_ds.map(
-    partial(preprocess_function, augment = True),
+    partial(preprocess_function, augment = False),
     remove_columns=[c for c in train_ds.column_names if c not in keep_cols],
     batched=True,
     batch_size=32,
@@ -230,7 +230,7 @@ config.num_labels=num_labels
 config.label2id=str_to_int
 config.id2label=int_to_str
 
-do_apply_dropout = False  #changed again to false from true
+do_apply_dropout = True  #changed again to false from true
 
 # check if dropout is enabled
 if do_apply_dropout:
@@ -248,6 +248,41 @@ slid_model = AutoModelForAudioClassification.from_pretrained(
 
 #freeze only the convolutional feature extractor
 slid_model.freeze_feature_encoder()
+
+
+class AugmentedAudioDataset(Dataset):
+    def __init__(self, hf_dataset, augment=False):
+        self.dataset = hf_dataset
+        self.augment = augment
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, idx):
+        sample = self.dataset[idx]
+
+        if self.augment:
+            # get raw audio and augment fresh every epoch
+            raw = np.array(sample["raw_audio"], dtype=np.float32)
+            raw = augment_audio(raw)
+
+            # re-run feature extractor on augmented raw audio
+            new_inputs = feature_extractor(
+                raw,
+                sampling_rate=16000,
+                truncation=True,
+                max_length=int(16000 * max_duration),
+                return_attention_mask=True,
+            )
+            sample = dict(sample)
+            sample[input_features_key] = np.array(
+                new_inputs[input_features_key][0], dtype=np.float32
+            )
+            sample["attention_mask"] = np.array(
+                new_inputs["attention_mask"][0]
+            )
+
+        return sample
 
 
 # %%
@@ -281,6 +316,10 @@ class AudioDataCollator:
 
 # %%
 data_collator = AudioDataCollator(feature_extractor)
+
+# Wrap training set with live augmentation, validation stays clean
+train_ds_final = AugmentedAudioDataset(train_ds_encoded, augment=True)
+valid_ds_final = AugmentedAudioDataset(valid_ds_encoded, augment=False)
 
 # %%
 batch_size = 16
@@ -346,8 +385,8 @@ def compute_metrics(eval_pred):
 trainer = Trainer(
     slid_model,
     training_args,
-    train_dataset=train_ds_encoded,
-    eval_dataset=valid_ds_encoded,
+    train_dataset=train_ds_final,
+    eval_dataset=valid_ds_final,
     tokenizer=feature_extractor,
     data_collator=data_collator,  
     compute_metrics=compute_metrics,
