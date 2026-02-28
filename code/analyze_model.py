@@ -29,6 +29,11 @@ model.eval()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
+
+label2id = model.config.label2id
+id2label = model.config.id2label
+lang_names = [id2label[i] for i in range(len(id2label))]
+
 all_preds = []
 all_labels = []
 all_hidden_states = []
