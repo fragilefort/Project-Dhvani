@@ -3,20 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-from datasets import load_dataset
+from datasets import load_dataset, Audio
 from transformers import AutoFeatureExtractor, AutoModelForAudioClassification
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.manifold import TSNE
+from dotenv import load_dotenv
 
 load_dotenv()
 
 # using validation run from cluster
 MODEL_PATH = "results_142014"
-DATASET_NAME = "badrex/nnti-dataset"
+DATASET_NAME = "badrex/nnti-dataset-full"
 OUTPUT_DIR = "figures"
 
-if not os.path.exists(OUTPUT_DIR):
-    os.makedirs(OUTPUT_DIR)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 dataset = load_dataset(DATASET_NAME, split="test", token=os.getenv("HF_TOKEN"))
