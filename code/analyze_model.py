@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # using validation run from cluster
-MODEL_PATH = "static_aug/checkpoint-5300"
+MODEL_PATH = "checkpoint-5300"
 DATASET_NAME = "badrex/nnti-dataset-full"
 OUTPUT_DIR = "figures"
 
