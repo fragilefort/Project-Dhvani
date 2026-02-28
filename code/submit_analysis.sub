@@ -11,7 +11,7 @@ log                     = logs/analysis_$(Cluster)_$(Process).log
 should_transfer_files   = YES
 when_to_transfer_output = ON_EXIT
 
-transfer_input_files    = .env, analyze_model.py, results_142014/checkpoint-5400
+transfer_input_files    = .env, analyze_model.py, static_aug/checkpoint-5300
 
 transfer_output_files   = figures
 transfer_output_remaps  = "figures = figures_improved_142014"
