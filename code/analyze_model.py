@@ -107,18 +107,42 @@ with open(os.path.join(OUTPUT_DIR, "classification_report.txt"), "w") as f:
 tsne = TSNE(n_components=2, random_state=42, perplexity=30, n_iter=1000)
 tsne_results = tsne.fit_transform(np.array(all_hidden_states))
 
-print("t-SNE plot by Language")
-plt.figure(figsize=(10, 8))
-sns.scatterplot(x=tsne_results[:, 0], y=tsne_results[:, 1], hue=all_labels_int, palette="tab20", legend=False)
-plt.title("t-SNE of Last Layer (Colored by Language)")
+# plot by language
+print("Generating t-SNE plot by language...")
+plt.figure(figsize=(12, 10))
+sns.scatterplot(
+    x=tsne_results[:, 0],
+    y=tsne_results[:, 1],
+    hue=[id2label[l] for l in all_labels_int],
+    palette="tab20",
+    alpha=0.7,
+    s=20
+)
+plt.title("t-SNE of Last Layer Representations (by Language)", fontsize=13)
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=7)
+plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "tsne_language.pdf"))
+plt.savefig(os.path.join(OUTPUT_DIR, "tsne_language.png"), dpi=150)
 plt.close()
+print("  t-SNE by language saved.")
 
-print("t-SNE plot by Speaker Identity...")
-plt.figure(figsize=(10, 8))
-sns.scatterplot(x=tsne_results[:, 0], y=tsne_results[:, 1], hue=all_speakers, palette="viridis", legend=False)
-plt.title("t-SNE of Last Layer (Colored by Speaker)")
+# plot by speaker
+print("Generating t-SNE plot by speaker...")
+plt.figure(figsize=(12, 10))
+sns.scatterplot(
+    x=tsne_results[:, 0],
+    y=tsne_results[:, 1],
+    hue=all_speakers,
+    palette="tab20",
+    alpha=0.7,
+    s=20,
+    legend=False
+)
+plt.title("t-SNE of Last Layer Representations (by Speaker)", fontsize=13)
+plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "tsne_speaker.pdf"))
+plt.savefig(os.path.join(OUTPUT_DIR, "tsne_speaker.png"), dpi=150)
 plt.close()
+print("  t-SNE by speaker saved.")
 
-print(f"plots saved to {OUTPUT_DIR}")
+print(f"\nAll plots saved to {OUTPUT_DIR}/")
