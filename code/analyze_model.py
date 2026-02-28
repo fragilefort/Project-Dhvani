@@ -18,7 +18,7 @@ OUTPUT_DIR = "figures"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-dataset = load_dataset(DATASET_NAME, split="test", token=os.getenv("HF_TOKEN"))
+dataset = load_dataset(DATASET_NAME, split = "validation")
 
 print(f"model loaded from {MODEL_PATH}")
 feature_extractor = AutoFeatureExtractor.from_pretrained(MODEL_PATH)
