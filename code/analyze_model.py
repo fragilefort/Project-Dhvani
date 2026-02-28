@@ -8,14 +8,18 @@ from transformers import AutoFeatureExtractor, AutoModelForAudioClassification
 from sklearn.metrics import confusion_matrix
 from sklearn.manifold import TSNE
 
-# using validation run from cluster
-MODEL_PATH = "../results_140943"  
-DATASET_NAME = "badrex/nnti-dataset"
-OUTPUT_DIR = "../report/figures"
+load_dotenv()
 
+# using validation run from cluster
+MODEL_PATH = "results_142014"
+DATASET_NAME = "badrex/nnti-dataset"
+OUTPUT_DIR = "figures"
+
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-dataset = load_dataset(DATASET_NAME, split="test")
+dataset = load_dataset(DATASET_NAME, split="test", token=os.getenv("HF_TOKEN"))
 
 print(f"model loaded from {MODEL_PATH}")
 feature_extractor = AutoFeatureExtractor.from_pretrained(MODEL_PATH)

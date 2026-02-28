@@ -1,0 +1,27 @@
+universe                = docker
+docker_image            = fragilefort/project-dhvani:v4
+
+executable              = /usr/bin/python
+arguments               = -u analyze_model.py
+
+output                  = logs/analysis_$(Cluster)_$(Process).out
+error                   = logs/analysis_$(Cluster)_$(Process).err
+log                     = logs/analysis_$(Cluster)_$(Process).log
+
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT
+
+transfer_input_files    = .env, analyze_model.py, /home/neuronet_team270/Project-Dhvani/code/results_142014
+
+transfer_output_files   = figures
+transfer_output_remaps  = "figures = figures_improved_142014"
+
+request_GPUs            = 1
+request_CPUs            = 4
+request_memory          = 32GB
+requirements            = UidDomain == "cs.uni-saarland.de"
+
++WantGPUHomeMounted     = true
++WantScratchMounted     = true
++MaxRunTime             = 21600
+queue 1
