@@ -8,11 +8,20 @@ from transformers import AutoFeatureExtractor, AutoModelForAudioClassification
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.manifold import TSNE
 from dotenv import load_dotenv
+import zipfile
 
 load_dotenv()
 
+CHECKPOINT = "checkpoint-5300"
+
+if os.path.exists(f"{CHECKPOINT}.zip"):
+    print("Unzipping checkpoint...")
+    with zipfile.ZipFile(f"{CHECKPOINT}.zip", 'r') as zip_ref:
+        zip_ref.extractall(".")
+    print("Unzip complete.")
+
 # using validation run from cluster
-MODEL_PATH = "checkpoint-5300"
+MODEL_PATH = CHECKPOINT
 DATASET_NAME = "badrex/nnti-dataset-full"
 OUTPUT_DIR = "figures"
 
