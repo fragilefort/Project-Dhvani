@@ -12,6 +12,9 @@ import zipfile
 
 load_dotenv()
 
+print("Current working directory:", os.getcwd())
+print("Files in directory:", os.listdir("."))
+
 CHECKPOINT = "checkpoint-5300"
 
 if os.path.exists(f"{CHECKPOINT}.zip"):
