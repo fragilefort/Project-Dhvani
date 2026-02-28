@@ -69,21 +69,47 @@ with torch.no_grad():
 
 print("Confusion Matrix generated")
 
-cm = confusion_matrix(all_labels, all_preds)
-plt.figure(figsize=(12, 10))
-sns.heatmap(cm, annot=False, cmap="Blues") 
-plt.title("Language Confusion Matrix")
-plt.xlabel("Predicted Language")
-plt.ylabel("Actual Language")
+cm = confusion_matrix(all_labels_int, all_preds)
+
+plt.figure(figsize=(18, 16))
+sns.heatmap(
+    cm,
+    annot=True,
+    fmt='d',
+    cmap="Blues",
+    xticklabels=lang_names,
+    yticklabels=lang_names
+)
+
+
+
+plt.title("Language Identification — Confusion Matrix", fontsize=14)
+plt.xlabel("Predicted Language", fontsize=12)
+plt.ylabel("Actual Language", fontsize=12)
+plt.xticks(rotation=45, ha='right', fontsize=9)
+plt.yticks(rotation=0, fontsize=9)
+plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "confusion_matrix.pdf"))
+plt.savefig(os.path.join(OUTPUT_DIR, "confusion_matrix.png"), dpi=150)
 plt.close()
 
-tsne = TSNE(n_components=2, random_state=42)
+
+report = classification_report(
+    all_labels_int,
+    all_preds,
+    target_names=lang_names
+)
+print(report)
+with open(os.path.join(OUTPUT_DIR, "classification_report.txt"), "w") as f:
+    f.write(report)
+
+
+tsne = TSNE(n_components=2, random_state=42, perplexity=30, n_iter=1000)
 tsne_results = tsne.fit_transform(np.array(all_hidden_states))
 
 print("t-SNE plot by Language")
 plt.figure(figsize=(10, 8))
-sns.scatterplot(x=tsne_results[:, 0], y=tsne_results[:, 1], hue=all_labels, palette="tab20", legend=False)
+sns.scatterplot(x=tsne_results[:, 0], y=tsne_results[:, 1], hue=all_labels_int, palette="tab20", legend=False)
 plt.title("t-SNE of Last Layer (Colored by Language)")
 plt.savefig(os.path.join(OUTPUT_DIR, "tsne_language.pdf"))
 plt.close()
