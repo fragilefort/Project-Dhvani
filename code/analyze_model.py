@@ -35,33 +35,40 @@ id2label = model.config.id2label
 lang_names = [id2label[i] for i in range(len(id2label))]
 
 all_preds = []
-all_labels = []
+all_labels_int = []
 all_hidden_states = []
 all_speakers = []
 
 print("audios running through model")
 with torch.no_grad():
-    for item in dataset:
-        audio_array = item["audio"]["array"]
-        
-        inputs = feature_extractor(audio_array, sampling_rate=16000, return_tensors="pt")
+    for i, item in enumerate(dataset):
+        if i % 100 == 0:
+            print(f"  Processing {i}/{len(dataset)}...")
+
+        audio_array = item["audio_filepath"]["array"].astype("float32")
+
+        inputs = feature_extractor(
+            audio_array,
+            sampling_rate=16000,
+            return_tensors="pt"
+        )
         inputs = {k: v.to(device) for k, v in inputs.items()}
 
         outputs = model(**inputs)
 
-        # prediction for Confusion Matrix
-        logits = outputs.logits
-        pred = torch.argmax(logits, dim=-1).item()
+        pred = torch.argmax(outputs.logits, dim=-1).item()
         all_preds.append(pred)
-        
-        all_labels.append(item["language"]) 
-        all_speakers.append(item["speaker_id"]) 
 
-        # Hidden States for t-SNE
+        # convert string label to int using model's label2id
+        all_labels_int.append(label2id[item["language"]])
+        all_speakers.append(item["speaker_id"])
+
+        # last hidden state mean pooled over time dimension
         hidden_state = outputs.hidden_states[-1].mean(dim=1).squeeze().cpu().numpy()
         all_hidden_states.append(hidden_state)
 
 print("Confusion Matrix generated")
+
 cm = confusion_matrix(all_labels, all_preds)
 plt.figure(figsize=(12, 10))
 sns.heatmap(cm, annot=False, cmap="Blues") 
