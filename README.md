@@ -10,6 +10,7 @@
 
 ## Project Structure
 Note: This project tree will still be updated after the report
+Note: The .env file will be provided empty, you will need to put HF and WANDB tokens
 ```
 code/
 ├── train_model.py        # Task 1 & 2: fine-tuning with augmentation
@@ -18,7 +19,7 @@ code/
 ├── submit_analysis.sub   # HTCondor submission file for analysis
 ├── requirements.txt      # Python dependencies
 ├── Dockerfile            # Docker image definition
-└── .env (Will not be provided)                 # HuggingFace and WandB tokens (You will have to put yours)
+└── .env
 ```
 
 ## Environment Setup
