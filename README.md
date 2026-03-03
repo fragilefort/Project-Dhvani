@@ -9,8 +9,7 @@
 **Python 3.10**
 
 ## Project Structure
-Note: This project tree will still be updated after the report
-
+Note: This project tree will still be updated after the report <br>
 Note: The .env file will be provided empty, you will need to put HF and WANDB tokens
 ```
 code/
