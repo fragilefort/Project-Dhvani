@@ -10,6 +10,7 @@
 
 ## Project Structure
 Note: This project tree will still be updated after the report
+
 Note: The .env file will be provided empty, you will need to put HF and WANDB tokens
 ```
 code/
