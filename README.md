@@ -37,14 +37,6 @@ To run the analysis of the model, choose the best checkpoint of the model, put t
 ```bash
 cd code; condor_submit submit_analysis.sub
 ```
-## Environment Variables
-
-Create a `.env` file in the `code/` directory with your tokens:
-
-```
-HF_TOKEN=your_huggingface_token
-WANDB_API_KEY=your_wandb_key
-```
 
 These are required to download the dataset from HuggingFace and log training metrics to Weights & Biases.
 
