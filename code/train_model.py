@@ -69,7 +69,7 @@ model_id = "utter-project/mHuBERT-147"
 # %%
 feature_extractor = AutoFeatureExtractor.from_pretrained(
     model_id, 
-    do_normalize=True,   ##also try false
+    do_normalize=True,   
     return_attention_mask=True,
 )
 
@@ -109,7 +109,7 @@ print(f"Audio lengths - Min: {min(lengths):.1f}s, Max: {max(lengths):.1f}s, Avg:
 print(f"75th percentile: {np.percentile(lengths, 75):.1f}s")
 print(f"95th percentile: {np.percentile(lengths, 95):.1f}s")
 
-## need to try for 5,7,10,15
+##tried for 5,7,10
 max_duration = 10 # in seconds
 
 # %%
@@ -240,7 +240,7 @@ if do_apply_dropout:
     config.feat_proj_dropout = 0.1   
 
 # %%
-# spoken language ID (SLID) model
+#spoken language identification (SLID) model
 slid_model = AutoModelForAudioClassification.from_pretrained(
     model_id,
     config=config,
@@ -324,8 +324,8 @@ valid_ds_final = AugmentedAudioDataset(valid_ds_encoded, augment=False)
 # %%
 batch_size = 16
 gradient_accumulation_steps = 1
-num_train_epochs = 10 #changed from 3 to 5 to see if model learns more 
-lr = 1e-5 # changed from 5e-6 to 1e-5 for 4th run
+num_train_epochs = 10 #changed from 3 to 5 to 10 to see if model learns more 
+lr = 1e-5 #changed from 5e-6 to 1e-5 for later experiments
             #changed from 1e-5 to 3e-5 for first experiment
         
 
