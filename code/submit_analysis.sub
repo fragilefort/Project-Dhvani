@@ -11,10 +11,10 @@ log                     = logs/analysis_$(Cluster)_$(Process).log
 should_transfer_files   = YES
 when_to_transfer_output = ON_EXIT
 
-transfer_input_files    = .env, analyze_model.py, /home/neuronet_team270/Project-Dhvani/code/results_mms-300m_vanilla/checkpoint-2700.zip
+transfer_input_files    = .env, analyze_model.py, /home/neuronet_team270/Project-Dhvani/code/hubert_noaug/checkpoint-5400.zip
 
 transfer_output_files   = figures
-transfer_output_remaps  = "figures = figures_baseline"
+transfer_output_remaps  = "figures = figures_hubert_noaug"
 
 request_GPUs            = 1
 request_CPUs            = 4
