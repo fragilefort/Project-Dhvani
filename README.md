@@ -40,7 +40,7 @@ The project runs inside a Docker container based on `nvidia/cuda:12.1.1-cudnn8-d
 ```
 fragilefort/project-dhvani:v4
 ```
-No need to build the image — the submission files already reference this image. If you want to rebuild it yourself (e.g. after modifying `requirements.txt`):
+No need to build the image - the submission files already reference this image. If you want to rebuild it yourself (e.g. after modifying `requirements.txt`):
 ```bash
 docker build -t fragilefort/project-dhvani:v4 .
 # then update the docker_image line in submit_job.sub and submit_analysis.sub
