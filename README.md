@@ -9,17 +9,25 @@
 **Python 3.10**
 
 ## Project Structure
-Note: This project tree will still be updated after the report <br>
 Note: The .env file will be provided empty, you will need to put HF and WANDB tokens
 ```
-code/
-├── train_model.py        # Task 1 & 2: fine-tuning with augmentation
-├── analyze_model.py      # Task 3: confusion matrix, t-SNE, classification report
-├── submit_job.sub        # HTCondor submission file for training
-├── submit_analysis.sub   # HTCondor submission file for analysis
-├── requirements.txt      # Python dependencies
-├── Dockerfile            # Docker image definition
-└── .env
+.
+├── code
+    ├── train_model.py        # Task 1 & 2: fine-tuning with augmentation
+    ├── analyze_model.py      # Task 3: confusion matrix, t-SNE, classification report
+    ├── submit_job.sub        # HTCondor submission file for training
+    ├── submit_analysis.sub   # HTCondor submission file for analysis
+    ├── requirements.txt      # Python dependencies
+    ├── Dockerfile            # Docker image definition
+    └── .env
+├── README.md
+├── report
+    ├── acl_natbib.bst
+    ├── custom.bib
+    ├── eacl2023.sty
+    ├── figures
+    ├── main.pdf
+    └── main.tex
 ```
 
 ## Environment Setup
