@@ -36,37 +36,59 @@ Note: The .env file will be provided empty, you will need to put HF and WANDB to
 
 The project runs inside a Docker container based on `nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04`.
 
-To run the first final state of the model:
+**The pre-built image is available at:**
+```
+fragilefort/project-dhvani:v4
+```
+No need to build the image — the submission files already reference this image. If you want to rebuild it yourself (e.g. after modifying `requirements.txt`):
 ```bash
-cd code; condor_submit submit_job.sub
+docker build -t fragilefort/project-dhvani:v4 .
+# then update the docker_image line in submit_job.sub and submit_analysis.sub
 ```
-The results are expected to be in the same directory (code) after the job is finished.
-To run the analysis of the model, choose the best checkpoint of the model, put the name of this checkpoint in the analyze_model.py (At the top), and also refer to this checkpoint in the submission file because it needs to be transferred into the container (and also needs to be zipped). Then:
+
+---
+
+### Running Training
+
+1. Update the `.env` file in the `code/` directory:
+```
+HF_TOKEN=your_huggingface_token
+WANDB_API_KEY=your_wandb_key
+```
+
+2. Submit the training job:
 ```bash
-cd code; condor_submit submit_analysis.sub
+cd code
+condor_submit submit_job.sub
 ```
 
-These are required to download the dataset from HuggingFace and log training metrics to Weights & Biases.
+Results and checkpoints will be saved to `results/<run_name>/` in the same directory after the job finishes.
 
-## Dependencies
+---
 
-Full list in `requirements.txt`:
+### Running Analysis
 
+1. Identify the best checkpoint from the training results:
+2. Zip the checkpoint folder:
+```bash
+cd results/<run_name>
+zip -r checkpoint-XXXX.zip checkpoint-XXXX
 ```
-torch==2.3.0
-torchaudio==2.3.0
-pandas==2.2.2
-numpy==1.26.4
-wandb==0.17.0
-datasets==2.19.2
-transformers==4.41.2
-evaluate==0.4.2
-huggingface_hub
-python-dotenv
-scikit-learn==1.5.0
-matplotlib==3.9.0
-seaborn==0.13.2
-audiomentations==0.39.0
-soundfile
-accelerate>=0.21.0
+
+3. Update `analyze_model.py` — set `CHECKPOINT` at the top of the file:
+```python
+CHECKPOINT = "checkpoint-XXXX"
 ```
+
+4. Update `submit_analysis.sub` — point `transfer_input_files` to your zip:
+```
+transfer_input_files = .env, analyze_model.py, /full/path/to/checkpoint-XXXX.zip
+```
+
+5. Submit the analysis job:
+```bash
+cd code
+condor_submit submit_analysis.sub
+```
+
+Output figures will be saved to `figures_<run_name>/` after the job finishes.
