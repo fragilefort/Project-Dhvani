@@ -1,0 +1,28 @@
+              precision    recall  f1-score   support
+
+     konkani       0.00      0.00      0.00       150
+       hindi       0.35      0.11      0.17       150
+    sanskrit       0.81      0.75      0.78       150
+     santali       0.65      0.34      0.45       150
+     marathi       0.37      0.82      0.51       150
+      sindhi       0.53      0.11      0.18       150
+    kashmiri       0.91      0.75      0.82       150
+        bodo       0.62      0.63      0.63       150
+       tamil       0.79      0.83      0.81       150
+    maithili       0.41      0.21      0.27       150
+     kannada       0.78      0.65      0.71       150
+      telugu       0.75      0.86      0.80       150
+     punjabi       0.33      0.84      0.47       150
+   malayalam       0.84      0.85      0.84       150
+      nepali       0.71      0.75      0.73       150
+       dogri       0.41      0.45      0.43       150
+    manipuri       0.62      0.81      0.71       150
+    assamese       0.70      0.86      0.77       150
+        urdu       0.56      0.65      0.60       150
+    gujarati       0.57      0.81      0.66       150
+        odia       0.50      0.39      0.44       150
+     bengali       0.69      0.59      0.64       150
+
+    accuracy                           0.59      3300
+   macro avg       0.59      0.59      0.56      3300
+weighted avg       0.59      0.59      0.56      3300
