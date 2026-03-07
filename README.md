@@ -48,8 +48,9 @@ docker build -t fragilefort/project-dhvani:v4 .
 
 ---
 
-### Running Training
+**Note: to view which experiments we did view the commit history using git log or visit https://github.com/fragilefort/Project-Dhvanio**
 
+### Running Training
 1. Update the `.env` file in the `code/` directory:
 ```
 HF_TOKEN=your_huggingface_token
