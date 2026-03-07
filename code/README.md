@@ -20,7 +20,8 @@ Note: The .env file will be provided empty, you will need to put HF and WANDB to
     ├── requirements.txt      # Python dependencies
     ├── Dockerfile            # Docker image definition
     └── .env
-├── README.md
+    ├── README.md
+
 ├── report
     ├── acl_natbib.bst
     ├── custom.bib
