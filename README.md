@@ -1,4 +1,4 @@
-# NNTI Project — Spoken Language Identification from Audio
+# NNTI Project - Spoken Language Identification from Audio
 
 **Model:** mHuBERT-147 fine-tuned with static/dynamic audio augmentation.  
 **Dataset:** [badrex/nnti-dataset-full](https://huggingface.co/datasets/badrex/nnti-dataset-full)
@@ -76,12 +76,12 @@ cd results/<run_name>
 zip -r checkpoint-XXXX.zip checkpoint-XXXX
 ```
 
-3. Update `analyze_model.py` — set `CHECKPOINT` at the top of the file:
+3. Update `analyze_model.py` - set `CHECKPOINT` at the top of the file:
 ```python
 CHECKPOINT = "checkpoint-XXXX"
 ```
 
-4. Update `submit_analysis.sub` — point `transfer_input_files` to your zip:
+4. Update `submit_analysis.sub` - point `transfer_input_files` to your zip:
 ```
 transfer_input_files = .env, analyze_model.py, /full/path/to/checkpoint-XXXX.zip
 ```
